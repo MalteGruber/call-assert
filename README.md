@@ -7,11 +7,10 @@ Here is a quick demonstration of how this library is used.
 void callback_a(int x,double y,char z){
   register(arg_gen("callback_a","idc",x,y,z));
 }
+
 void callback_b(int a){
   register(arg_gen("callback_b","i",a));
 }
-
-
 
 int unit_test_runnuer(){
   ...
