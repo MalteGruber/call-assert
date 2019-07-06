@@ -27,16 +27,16 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
-#define PASS 0
-#define ERROR -1
-typedef struct
-{
+
+enum {
+	PASS = 0, ERROR = -1
+};
+typedef struct {
 	void * data;
-}call_state_t;
+} call_state_t;
 
-int new_assert(const char *name, const char *arg_str, ...);
-int callstate_generator(const char *name, const char *arg_str, ...);
+int callback_called(const char *name, const char *arg_str, ...);
+int callback_assert(const char *name, const char *arg_str, ...);
 int asssert_call_queue_size(int size);
-
 
 #endif /* CALLBACK_TESTER_H_ */

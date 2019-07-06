@@ -7,23 +7,53 @@
 #include <stdio.h>
 #include <callback_tester.h>
 
-#define ASSERT(name, format, ...) if(new_assert(name,format,__VA_ARGS__)!=PASS) return ERROR; else return PASS;
+#include <limits.h>
+#include <float.h>
+#define ASSERT_ERROR(V) if(V!=ERROR) return ERROR;
+#define ASSERT_PASS(V) if(V!=PASS) return ERROR;
 
-int test(void) {
-	callstate_generator("example_call_A", "llidl", 4, 123, 15, 3.14159, 9999);
-	ASSERT("example_call_A", "llRiRdl", 4, 123, 9, 15, 3.14, 4.0, 99991);
-	asssert_call_queue_size(0);
-	return 0;
+#define TEST_CALL_TYPE(T,FORMAT,VAL); \
+ASSERT_PASS(callback_called("A", "id", INT_MAX,DBL_MAX));\
+ASSERT_PASS(callback_called("B", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_called("type_test_"#T, "idl"FORMAT,42,3.14,9999999, VAL));\
+ASSERT_PASS(callback_called("C", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_assert("A", "id", INT_MAX,DBL_MAX));\
+ASSERT_PASS(callback_assert("B", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_assert("type_test_"#T, "iRdRl"FORMAT,42,3.13,3.15,9999998,9999999, VAL));\
+ASSERT_PASS(callback_assert("C", "id", INT_MIN,DBL_MIN));\
+	;\
+ASSERT_PASS(callback_called("A", "id", INT_MAX,DBL_MAX));\
+ASSERT_PASS(callback_called("B", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_called("type_test_"#T, "idl"FORMAT,42,3.14,9999999, VAL));\
+ASSERT_PASS(callback_called("C", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_assert("A", "id", INT_MAX,DBL_MAX));\
+ASSERT_PASS(callback_assert("B", "id", INT_MIN,DBL_MIN));\
+ASSERT_ERROR(callback_assert("type_test_"#T, "iRdRl"FORMAT,42,3.13,3.15,9999998,9999999, VAL-1));\
+ASSERT_PASS(callback_assert("C", "id", INT_MIN,DBL_MIN));\
+ASSERT_PASS(callback_called("type_test_"#T, "idl"FORMAT,42,3.14,9999999, VAL));\
+ASSERT_ERROR(callback_assert("type_test_"#T, "iRdRl"FORMAT,42,3.13,3.15,9999998,9999999, VAL-1));\
+
+
+
+int test_types(void) {
+
+	TEST_CALL_TYPE(int,"i",4123);
+	TEST_CALL_TYPE(long,"l",12324123);
+	TEST_CALL_TYPE(double,"d",100.000);
+	ASSERT_PASS(asssert_call_queue_size(0));
+	return PASS;
 }
+
+
 
 int main(int argc, char ** argv) {
 	printf("Example file\n");
 
-	int res = test();
+	int res = test_types();
 	if (res != PASS) {
-		printf("UNIT TEST FAILED!\r\n");
+		printf("TEST FAILED!\r\n");
 	} else {
-		printf("UNIT TEST PASSED! :D\r\n");
+		printf("TEST PASSED!\r\n");
 	}
 	return 0;
 }

@@ -120,7 +120,7 @@ void set_log_sink(FILE * dst) {
 	printer = dst;
 }
 
-int callstate_generator(const char *name, const char *arg_str, ...) {
+int callback_called(const char *name, const char *arg_str, ...) {
 
 	char * arg_type_char = (char*) arg_str;
 	va_list args;
@@ -173,7 +173,7 @@ if(c==TARGET_CHAR){ \
 	handled=true;\
 }\
 
-int new_assert(const char *name, const char *arg_str, ...) {
+int callback_assert(const char *name, const char *arg_str, ...) {
 
 	char * arg_type_char = (char*) arg_str;
 	va_list args;
