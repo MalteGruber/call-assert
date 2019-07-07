@@ -44,19 +44,22 @@ int main(int argc, char ** argv) {
 ## API
 
 Function called by callback to register the function call and its arguments.
--- `name`: *function name, must match that provided to `callback_assert`*
--- `arg_str`:  *Type format string, must describe type of arguments passed after `arg_str`*
+
+- `name`: *function name, must match that provided to `callback_assert`*
+
+- `arg_str`:  *Type format string, must describe type of arguments passed after `arg_str`*
+
 ```C
 int callback_called(const char *name, const char *arg_str, ...);
 ```
 Verify that the function `name` was called with the specified arguments.
--- `name`: *function name, must match that provided to `callback_called`*
--- `arg_str`: *Type format string, must describe type of arguments passed after `arg_str`*
+- `name`: *function name, must match that provided to `callback_called`*
+- `arg_str`: *Type format string, must describe type of arguments passed after `arg_str`*
 ```C
 int callback_assert(const char *name, const char *arg_str, ...);
 ```
 Verify the size of the call queue.
--- `size`:  *Number of calls expected in the call queue*
+- `size`:  *Number of calls expected in the call queue*
 ```C
 int asssert_call_queue_size(int size);```
 ```
