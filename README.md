@@ -76,6 +76,6 @@ If `R` is prepending to a type character in `arg_types` in `callback_assert` the
 
 ```C
     callback_called("callback_foo", "i", 42);
-    //Range check value passed in callback_called
+    /*Range check value passed in callback_called*/
     ASSERT_PASS(callback_assert("callback_foo", "Ri", 41,44));
 ```
