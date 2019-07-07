@@ -1,5 +1,5 @@
 
-# Call Assert Library
+# Call Assert
 *Disclaimer: This is a work in progress, do not use in critical applications*
 
 This library is intended to be used with other unit testing libraries. It serves as a helper to verify that callbacks or wrapped functions have been called in the correct order and with the right arguments. This library also supports range checking of arguments.
