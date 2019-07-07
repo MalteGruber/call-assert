@@ -1,6 +1,6 @@
 
 # Call Assert Library
-*Disclaimer: This is a work in progress, do not for critical applications*
+*Disclaimer: This is a work in progress, do not use in critical applications*
 
 This library is intended to be used with other unit testing libraries. It serves as a helper to verify that callbacks or wrapped functions have been called in the correct order and with the right arguments. This library also supports range checking of arguments.
 
@@ -70,4 +70,12 @@ int asssert_call_queue_size(int size);```
 The following types can be passed to arg_gen's arg_types format string:
 - d: double
 - i: int
-- c: char
+- l: long
+## Range Check
+If `R` is prepending to a type character in `arg_types` in `callback_assert` the argument will be range asserted between the following two arguments given to `callback_assert`. 
+
+```C
+    callback_called("callback_foo", "i", 42);
+    //Range check value passed in callback_called
+    ASSERT_PASS(callback_assert("callback_foo", "Ri", 41,44));
+```
