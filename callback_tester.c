@@ -35,10 +35,11 @@ typedef struct {
 
 queue_member_t *queue_base = NULL;
 
+static bool printer_initialized = false;
+
 static void log_error(const char *format, ...) {
-	bool initialized = false;
-	if (!initialized) {
-		initialized = true;
+	if (!printer_initialized) {
+		printer_initialized = true;
 		printer = stderr;
 	}
 	va_list vargs;
@@ -118,8 +119,11 @@ static void align_ptr(byte ** ptr) {
 
 void set_log_sink(FILE * dst) {
 	printer = dst;
+	printer_initialized=true;
 }
-
+int name_strlen(const char *name) {
+	return strlen(name) + 1;
+}
 int callback_called(const char *name, const char *arg_str, ...) {
 
 	char * arg_type_char = (char*) arg_str;
@@ -127,13 +131,14 @@ int callback_called(const char *name, const char *arg_str, ...) {
 
 	/*Allocate space for the packet, assume that every argument is of max length*/
 	int argc = strlen(arg_str);
-	int name_len = strlen(name);
-	byte *data = malloc((argc + 1) * MAX_ARG_SIZE + name_len);
+	int name_len = name_strlen(name);
+	byte *data = aligned_alloc(MAX_ARG_SIZE,
+			(argc + 1) * MAX_ARG_SIZE + name_len);
 	byte *wptr = data;
 
 	/*Save the name*/
 	strcpy((char*) wptr, name);
-	wptr += strlen(name);
+	wptr += name_len;
 
 	va_start(args, arg_str);
 
@@ -169,7 +174,7 @@ if(c==TARGET_CHAR){ \
 		if(a!=*x){log_error("ERROR: argument %d (type "#T") of %s with value "#FORMAT" not equal to "#FORMAT"\n",arg_counter,caller_name,*x,a);\
 		free(base);va_end(args);return ERROR;}\
 	}\
-	rptr_real+=sizeof(int);\
+	rptr_real+=sizeof(T);\
 	handled=true;\
 }\
 
@@ -184,7 +189,7 @@ int callback_assert(const char *name, const char *arg_str, ...) {
 	dequeue(&rptr_real);
 	byte *base = rptr_real;
 	char * caller_name = (char*) rptr_real;
-	rptr_real += strlen(caller_name);
+	rptr_real += name_strlen(caller_name);
 
 	align_ptr(&rptr_real);
 
@@ -223,7 +228,7 @@ int callback_assert(const char *name, const char *arg_str, ...) {
 
 	} while (*(++arg_type_char) != '\0');
 	va_end(args);
-
+	free(base);
 	return PASS;
 }
 

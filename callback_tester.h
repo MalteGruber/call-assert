@@ -38,5 +38,6 @@ typedef struct {
 int callback_called(const char *name, const char *arg_str, ...);
 int callback_assert(const char *name, const char *arg_str, ...);
 int asssert_call_queue_size(int size);
+void set_log_sink(FILE * dst);
 
 #endif /* CALLBACK_TESTER_H_ */
